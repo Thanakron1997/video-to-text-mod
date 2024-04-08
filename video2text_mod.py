@@ -135,20 +135,18 @@ def video_chatgpt_infer(video_frames, question, conv_mode, model, vision_tower, 
     return outputs
 
 # mod function
-def get_sammary(video_path):
-    out = {}
-    model_name = "video2text/LLaVA-7B-Lightening-v1-1"
+def get_summary(video_path):
+    model_name = "video2text_mod/LLaVA-7B-Lightening-v1-1"
     projection_path = ""
     model, vision_tower, tokenizer, image_processor, video_token_len = initialize_model(model_name,projection_path)
     if os.path.exists(video_path):
         video_frames = load_video(video_path)
-    out['video_path'] = video_path
-    question ="what is object in this video"
-    conv_mode = 'video-chatgpt_v1'
-    output = video_chatgpt_infer(video_frames, question, conv_mode, model, vision_tower,tokenizer, image_processor, video_token_len)
-    out['object'] = output
-    question = "Describe the video" 
-    output_2 = video_chatgpt_infer(video_frames, question, conv_mode, model, vision_tower,tokenizer, image_processor, video_token_len)
-    out['summary'] = output_2
-    return out
-
+        question ="List the things in this video in detail"
+        conv_mode = 'video-chatgpt_v1'
+        output = video_chatgpt_infer(video_frames, question, conv_mode, model, vision_tower,tokenizer, image_processor, video_token_len)
+        question = "Describe the video in detail" 
+        output_2 = video_chatgpt_infer(video_frames, question, conv_mode, model, vision_tower,tokenizer, image_processor, video_token_len)
+    else:
+        output = "no video"
+        output_2 = "no video"
+    return output, output_2
